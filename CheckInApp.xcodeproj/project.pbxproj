@@ -1,0 +1,490 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0288E86BE0472A8CCBCA6C51 /* CheckInTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51721F5A72B70216199D62E6 /* CheckInTimelineProvider.swift */; };
+		3E7B569D8137F4903AC92B52 /* CheckInWidgetConfigIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD92894359889E1DC51FC1EE /* CheckInWidgetConfigIntent.swift */; };
+		452622921665A60C4C82AE4B /* CheckInIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C4873C08524914A605F33B /* CheckInIntent.swift */; };
+		5C0F471BFC042E2CF3BD9D09 /* CheckInStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68EF99790742C42E1FC3B6 /* CheckInStore.swift */; };
+		71630BA92E3353A694500A48 /* CheckInStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA68EF99790742C42E1FC3B6 /* CheckInStore.swift */; };
+		86CD04D73121F424C9D0019B /* CalendarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601B453A2191F95F2ADA2EF8 /* CalendarHelper.swift */; };
+		8AE48770A4F21FEAF6184ED5 /* CheckInApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE98570850CA20300F7AE610 /* CheckInApp.swift */; };
+		90FDF2E4BA9674F3C990FB8D /* CheckInWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306291A75F4892CB06C66874 /* CheckInWidgetView.swift */; };
+		9B306295E43BFE0E1EC8442B /* CheckInWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D80B62DDCBD6B915CA4E8 /* CheckInWidget.swift */; };
+		9F6AC2950390C9417E0B3F38 /* CheckInWidgetConfigIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD92894359889E1DC51FC1EE /* CheckInWidgetConfigIntent.swift */; };
+		A80BB5347FF5C92D8E4C2397 /* CalendarHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601B453A2191F95F2ADA2EF8 /* CalendarHelper.swift */; };
+		AC1239C744CDBF1D94660FCA /* CheckInWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27CF891A7F8BC481E7E6781C /* CheckInWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		BD17E819EE814A06C81C5455 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88D19088BF45BDFC301EACD6 /* ContentView.swift */; };
+		DC68008A86DDF6612FF456BE /* CheckInIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C4873C08524914A605F33B /* CheckInIntent.swift */; };
+		E71990206C310DEB3587BF62 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EE286CAA983B3A6B05A90080 /* Assets.xcassets */; };
+		FFE7847E632432ABE0F3F76C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8DC934D9330C9FB631A228F /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		E9259E6AFBCF0990D44F5DE0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 71F2D9F4F647046B3695301D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8262E200EEDD1F1CA7172D3;
+			remoteInfo = CheckInWidgetExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		BCA139EEF5A2C99D67ACC3DE /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AC1239C744CDBF1D94660FCA /* CheckInWidgetExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1EBBD0D53BCEE95BC6EF5297 /* CheckInApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CheckInApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		27CF891A7F8BC481E7E6781C /* CheckInWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CheckInWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		2DE9215BDC9C967624B7FC9C /* CheckInApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CheckInApp.entitlements; sourceTree = "<group>"; };
+		306291A75F4892CB06C66874 /* CheckInWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInWidgetView.swift; sourceTree = "<group>"; };
+		47C4873C08524914A605F33B /* CheckInIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInIntent.swift; sourceTree = "<group>"; };
+		51721F5A72B70216199D62E6 /* CheckInTimelineProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInTimelineProvider.swift; sourceTree = "<group>"; };
+		601B453A2191F95F2ADA2EF8 /* CalendarHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarHelper.swift; sourceTree = "<group>"; };
+		69C8C3F7F6EB915E59295E09 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		88D19088BF45BDFC301EACD6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B49D955F23933E58B2BDB63D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C8DC934D9330C9FB631A228F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D5E9CF362DF5FC8B1A9E9919 /* CheckInWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CheckInWidget.entitlements; sourceTree = "<group>"; };
+		EA68EF99790742C42E1FC3B6 /* CheckInStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInStore.swift; sourceTree = "<group>"; };
+		ED4D80B62DDCBD6B915CA4E8 /* CheckInWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInWidget.swift; sourceTree = "<group>"; };
+		EE286CAA983B3A6B05A90080 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EE98570850CA20300F7AE610 /* CheckInApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInApp.swift; sourceTree = "<group>"; };
+		FD92894359889E1DC51FC1EE /* CheckInWidgetConfigIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckInWidgetConfigIntent.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		072A62D67EF0DD775422BA52 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1EBBD0D53BCEE95BC6EF5297 /* CheckInApp.app */,
+				27CF891A7F8BC481E7E6781C /* CheckInWidgetExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		123E749ED7DBDD7BAB6C5244 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				601B453A2191F95F2ADA2EF8 /* CalendarHelper.swift */,
+				47C4873C08524914A605F33B /* CheckInIntent.swift */,
+				EA68EF99790742C42E1FC3B6 /* CheckInStore.swift */,
+				FD92894359889E1DC51FC1EE /* CheckInWidgetConfigIntent.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		8433470AEF1183D6409CE55D /* CheckInApp */ = {
+			isa = PBXGroup;
+			children = (
+				C8DC934D9330C9FB631A228F /* Assets.xcassets */,
+				2DE9215BDC9C967624B7FC9C /* CheckInApp.entitlements */,
+				EE98570850CA20300F7AE610 /* CheckInApp.swift */,
+				88D19088BF45BDFC301EACD6 /* ContentView.swift */,
+				B49D955F23933E58B2BDB63D /* Info.plist */,
+			);
+			path = CheckInApp;
+			sourceTree = "<group>";
+		};
+		AB2BAEB54FDB069149912F03 /* CheckInWidget */ = {
+			isa = PBXGroup;
+			children = (
+				EE286CAA983B3A6B05A90080 /* Assets.xcassets */,
+				51721F5A72B70216199D62E6 /* CheckInTimelineProvider.swift */,
+				D5E9CF362DF5FC8B1A9E9919 /* CheckInWidget.entitlements */,
+				ED4D80B62DDCBD6B915CA4E8 /* CheckInWidget.swift */,
+				306291A75F4892CB06C66874 /* CheckInWidgetView.swift */,
+				69C8C3F7F6EB915E59295E09 /* Info.plist */,
+			);
+			path = CheckInWidget;
+			sourceTree = "<group>";
+		};
+		D021194EE11F04EA322DD286 = {
+			isa = PBXGroup;
+			children = (
+				8433470AEF1183D6409CE55D /* CheckInApp */,
+				AB2BAEB54FDB069149912F03 /* CheckInWidget */,
+				123E749ED7DBDD7BAB6C5244 /* Shared */,
+				072A62D67EF0DD775422BA52 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		000C8891BC53A898473C496C /* CheckInApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 296C3F9DDD1987D44FF6D680 /* Build configuration list for PBXNativeTarget "CheckInApp" */;
+			buildPhases = (
+				DF430E1B117A52A2271706E0 /* Sources */,
+				6B8A5BBEBA38B307B44A1DFB /* Resources */,
+				BCA139EEF5A2C99D67ACC3DE /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0EE7C430107127994E9A30F7 /* PBXTargetDependency */,
+			);
+			name = CheckInApp;
+			packageProductDependencies = (
+			);
+			productName = CheckInApp;
+			productReference = 1EBBD0D53BCEE95BC6EF5297 /* CheckInApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D8262E200EEDD1F1CA7172D3 /* CheckInWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8362880AB72720919F1DAF4D /* Build configuration list for PBXNativeTarget "CheckInWidgetExtension" */;
+			buildPhases = (
+				058C723B881D340F8E13AAE4 /* Sources */,
+				30B5B3B8B27F0778C4B9396B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CheckInWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = CheckInWidgetExtension;
+			productReference = 27CF891A7F8BC481E7E6781C /* CheckInWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		71F2D9F4F647046B3695301D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					000C8891BC53A898473C496C = {
+						ProvisioningStyle = Automatic;
+					};
+					D8262E200EEDD1F1CA7172D3 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FF2556FC5656A84D04422A2E /* Build configuration list for PBXProject "CheckInApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = D021194EE11F04EA322DD286;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 072A62D67EF0DD775422BA52 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				000C8891BC53A898473C496C /* CheckInApp */,
+				D8262E200EEDD1F1CA7172D3 /* CheckInWidgetExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		30B5B3B8B27F0778C4B9396B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E71990206C310DEB3587BF62 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6B8A5BBEBA38B307B44A1DFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FFE7847E632432ABE0F3F76C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		058C723B881D340F8E13AAE4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				86CD04D73121F424C9D0019B /* CalendarHelper.swift in Sources */,
+				DC68008A86DDF6612FF456BE /* CheckInIntent.swift in Sources */,
+				5C0F471BFC042E2CF3BD9D09 /* CheckInStore.swift in Sources */,
+				0288E86BE0472A8CCBCA6C51 /* CheckInTimelineProvider.swift in Sources */,
+				9B306295E43BFE0E1EC8442B /* CheckInWidget.swift in Sources */,
+				9F6AC2950390C9417E0B3F38 /* CheckInWidgetConfigIntent.swift in Sources */,
+				90FDF2E4BA9674F3C990FB8D /* CheckInWidgetView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DF430E1B117A52A2271706E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A80BB5347FF5C92D8E4C2397 /* CalendarHelper.swift in Sources */,
+				8AE48770A4F21FEAF6184ED5 /* CheckInApp.swift in Sources */,
+				452622921665A60C4C82AE4B /* CheckInIntent.swift in Sources */,
+				71630BA92E3353A694500A48 /* CheckInStore.swift in Sources */,
+				3E7B569D8137F4903AC92B52 /* CheckInWidgetConfigIntent.swift in Sources */,
+				BD17E819EE814A06C81C5455 /* ContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0EE7C430107127994E9A30F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8262E200EEDD1F1CA7172D3 /* CheckInWidgetExtension */;
+			targetProxy = E9259E6AFBCF0990D44F5DE0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1EE1BB7BFE83B7013333582E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CheckInApp/CheckInApp.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CheckInApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkin.calendar;
+				PRODUCT_NAME = Kinetik;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3A076E1BAB721F449D7DF5D1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CheckInWidget/CheckInWidget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CheckInWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkin.calendar.widget;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		4540F20F9EADBFAE8EC327B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		4F6DBFCDD49058800676D7F2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_ENTITLEMENTS = CheckInWidget/CheckInWidget.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CheckInWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkin.calendar.widget;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6B796EC188FE435CAE358646 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = CheckInApp/CheckInApp.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = CheckInApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.checkin.calendar;
+				PRODUCT_NAME = Kinetik;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		99596D3B3C0A596C8BAFB1F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		296C3F9DDD1987D44FF6D680 /* Build configuration list for PBXNativeTarget "CheckInApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EE1BB7BFE83B7013333582E /* Debug */,
+				6B796EC188FE435CAE358646 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8362880AB72720919F1DAF4D /* Build configuration list for PBXNativeTarget "CheckInWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A076E1BAB721F449D7DF5D1 /* Debug */,
+				4F6DBFCDD49058800676D7F2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FF2556FC5656A84D04422A2E /* Build configuration list for PBXProject "CheckInApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4540F20F9EADBFAE8EC327B7 /* Debug */,
+				99596D3B3C0A596C8BAFB1F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 71F2D9F4F647046B3695301D /* Project object */;
+}
