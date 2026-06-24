@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="CheckInApp/Assets.xcassets/AppIcon.appiconset/icon_512x512.png" width="128" height="128" alt="Kinetik Logo">
+  <img src="CheckInApp/Assets.xcassets/AppIcon.appiconset/mac_512.png" width="128" height="128" alt="Kinetik Logo">
   <h1>Kinetik</h1>
   <p><b>A beautiful, native macOS habit tracker built with SwiftUI.</b></p>
 
   <p>
-    <a href="https://github.com/yourusername/kinetik/stargazers"><img src="https://img.shields.io/github/stars/yourusername/kinetik?style=for-the-badge&color=teal" alt="Stars"></a>
-    <a href="https://github.com/yourusername/kinetik/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License"></a>
+    <a href="https://github.com/bzasdhfj/kinetik/stargazers"><img src="https://img.shields.io/github/stars/bzasdhfj/kinetik?style=for-the-badge&color=teal" alt="Stars"></a>
+    <a href="https://github.com/bzasdhfj/kinetik/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License"></a>
     <a href="https://swift.org/"><img src="https://img.shields.io/badge/Swift-5.9-orange.svg?style=for-the-badge" alt="Swift"></a>
     <a href="https://developer.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-14.0+-black.svg?style=for-the-badge&logo=apple" alt="macOS"></a>
   </p>
@@ -30,9 +30,7 @@
 
 | Main Dashboard | Desktop Widget |
 | :---: | :---: |
-| <img src="https://via.placeholder.com/600x400/1e1e1e/888888?text=Main+Dashboard+Screenshot" width="400"> | <img src="https://via.placeholder.com/300x200/1e1e1e/888888?text=Desktop+Widget" width="200"> |
-
-## 🚀 Installation
+| <img src="https://github.com/user-attachments/assets/ec0f8b08-ac2f-4f0d-ab0c-5004fe7506dc" width="400"> | <img src="https://github.com/user-attachments/assets/e82aa03e-7866-4311-9748-225e03125b80" width="200"> |
 
 ### Prerequisites
 - **macOS 14.0 (Sonoma)** or later.
