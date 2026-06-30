@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kinetik — Native macOS Habit Tracker</title>
+  <meta name="description" content="A beautiful, native macOS habit tracker built with SwiftUI. Designed for focus, speed, and 100% privacy.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styling -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Decorative Glowing Blobs -->
+  <div class="bg-glows" aria-hidden="true">
+    <div class="glow-1"></div>
+    <div class="glow-2"></div>
+    <div class="glow-3"></div>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <img src="assets/icon.png" alt="Kinetik Logo">
+        <span>Kinetik</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#showcase">Showcase</a>
+        <a href="https://github.com/bzasdhfj/kinetik" class="btn-nav" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero">
+      <div class="badge">
+        <span class="badge-dot"></span> macOS Sonoma Native
+      </div>
+      <h1>Keep Your Streak.<br>Master Your Habits.</h1>
+      <p class="tagline">
+        Kinetik is a lightning-fast, native macOS self-discipline tool. Zero tracking, zero bloat, beautifully integrated into your desktop.
+      </p>
+      <div class="cta-group">
+        <a href="https://github.com/bzasdhfj/kinetik/releases" class="btn-primary" target="_blank" rel="noopener">
+          <span>Get Kinetik</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </a>
+        <a href="https://github.com/bzasdhfj/kinetik" class="btn-secondary" target="_blank" rel="noopener">
+          <span>Source Code</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </a>
+      </div>
+      <div class="hero-mockup">
+        <img src="assets/hero.png" alt="Kinetik Mockup on MacBook Screen">
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+      <div class="section-title">
+        <h2>Built with Purpose</h2>
+        <p>A habit tracker that respects your Mac and your privacy.</p>
+      </div>
+      <div class="features-grid">
+        <!-- Feature 1: Privacy -->
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>100% Local Privacy</h3>
+          <p>
+            Your data is stored locally using native file systems. No servers, no accounts, and absolutely zero analytics or user tracking.
+          </p>
+        </div>
+        <!-- Feature 2: Native Swift -->
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Pure Native SwiftUI</h3>
+          <p>
+            No Electron bloat. Starts up instantly, runs smoothly with native spring animations, and uses virtually 20MB of memory.
+          </p>
+        </div>
+        <!-- Feature 3: 3 AM Cutoff -->
+        <div class="feature-card">
+          <div class="feature-icon">🌙</div>
+          <h3>3 AM Logical Cutoff</h3>
+          <p>
+            Study or work late past midnight? Your streak won't break. Kinetik handles day rollover logically at 3 AM.
+          </p>
+        </div>
+        <!-- Feature 4: Custom Frequency -->
+        <div class="feature-card">
+          <div class="feature-icon">📅</div>
+          <h3>Smart Scheduling</h3>
+          <p>
+            Create tasks that run every day, weekdays, weekends, or specific calendar dates. Streaks pause automatically on empty days.
+          </p>
+        </div>
+        <!-- Feature 5: Desktop Widgets -->
+        <div class="feature-card">
+          <div class="feature-icon">🧩</div>
+          <h3>Interactive Widgets</h3>
+          <p>
+            Keep your contribution-style heatmap directly on your desktop. Check in with a single click without opening the main app.
+          </p>
+        </div>
+        <!-- Feature 6: Deep Analytics -->
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Detailed Analytics</h3>
+          <p>
+            Understand your consistency with custom completion rates, longest streaks, total days, and a 14-day history chart.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Showcase Section -->
+    <section id="showcase" class="showcase">
+      <div class="section-title">
+        <h2>App Tour</h2>
+        <p>Explore Kinetik's simple yet extremely powerful interface.</p>
+      </div>
+      <div class="showcase-container">
+        <div class="showcase-menu">
+          <button class="showcase-item active" onclick="switchShowcase(0)">
+            <h4>☀️ Today's Tasks</h4>
+            <p>Differentiate between Required habits and optional Bonus tasks to keep your motivation high.</p>
+          </button>
+          <button class="showcase-item" onclick="switchShowcase(1)">
+            <h4>📅 Calendar Heatmap</h4>
+            <p>GitHub-style contribution grid that visually charts your streaks and completion history.</p>
+          </button>
+          <button class="showcase-item" onclick="switchShowcase(2)">
+            <h4>📊 Analytics & Trends</h4>
+            <p>An elegant line chart showing your daily check-in habits, total days, and overall completion rate.</p>
+          </button>
+          <button class="showcase-item" onclick="switchShowcase(3)">
+            <h4>🧩 Desktop Widgets</h4>
+            <p>Interactive macOS widgets for quick check-ins and keeping your progress visible at all times.</p>
+          </button>
+          <button class="showcase-item" onclick="switchShowcase(4)">
+            <h4>⚙️ Smart Settings</h4>
+            <p>Manage your custom task schedule and frequency (working days, custom calendar dates, weekends).</p>
+          </button>
+        </div>
+        <div class="showcase-display">
+          <img src="assets/screenshot-tasks.png" class="showcase-img active" alt="Today's Tasks Screenshot">
+          <img src="assets/screenshot-calendar.png" class="showcase-img" alt="Calendar Heatmap Screenshot">
+          <img src="assets/screenshot-analytics.png" class="showcase-img" alt="Analytics and Trends Screenshot">
+          <img src="assets/screenshot-widgets.png" class="showcase-img" alt="macOS Widgets Screenshot">
+          <img src="assets/screenshot-settings.png" class="showcase-img" alt="Smart Settings Screenshot">
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-banner">
+      <div class="cta-banner-content">
+        <h2>Build Better Habits Today.</h2>
+        <p>Ready to upgrade your focus? Download Kinetik's latest release from GitHub and start building your streak right on your desktop.</p>
+        <div class="cta-group">
+          <a href="https://github.com/bzasdhfj/kinetik/releases" class="btn-primary" target="_blank" rel="noopener">
+            <span>Download for macOS</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <a href="#" class="footer-logo">
+        <img src="assets/icon.png" alt="Kinetik Logo">
+        <span>Kinetik</span>
+      </a>
+      <p>&copy; 2026 Kinetik. Native Swift Open Source Habit Tracker.</p>
+      <p>Built with ❤️ by an independent developer</p>
+    </div>
+  </footer>
+
+  <script>
+    function switchShowcase(index) {
+      // Update buttons
+      const items = document.querySelectorAll('.showcase-item');
+      items.forEach((item, idx) => {
+        if (idx === index) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+
+      // Update images
+      const images = document.querySelectorAll('.showcase-img');
+      images.forEach((img, idx) => {
+        if (idx === index) {
+          img.classList.add('active');
+        } else {
+          img.classList.remove('active');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
