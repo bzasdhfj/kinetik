@@ -65,7 +65,7 @@ struct GlassBackground: View {
 struct TasksTab: View {
     @Binding var streak: Int
     var body: some View {
-        TasksView(date: Date(), streak: $streak, isReadOnlyPast: false)
+        TasksView(date: Date.logicalNow, streak: $streak, isReadOnlyPast: false)
     }
 }
 
@@ -281,7 +281,7 @@ struct TaskRowView: View {
 // MARK: - 日历 Tab
 struct CalendarTab: View {
     @Binding var streak: Int
-    @State private var displayedMonth: Date = Date()
+    @State private var displayedMonth: Date = Date.logicalNow
     @State private var refreshTrigger = 0
     @State private var selectedPastDate: Date? = nil
     
@@ -380,9 +380,9 @@ struct CalendarTab: View {
     
     @ViewBuilder
     private func dayCell(for date: Date) -> some View {
-        let isToday = calendar.isDateInToday(date)
+        let isToday = calendar.isDate(date, inSameDayAs: Date.logicalNow)
         let dayNumber = calendar.component(.day, from: date)
-        let isFuture = calendar.startOfDay(for: date) > calendar.startOfDay(for: Date())
+        let isFuture = calendar.startOfDay(for: date) > calendar.startOfDay(for: Date.logicalNow)
         let status = isFuture ? .none : CheckInStore.shared.status(for: date)
         
         ZStack {
@@ -422,6 +422,8 @@ struct CalendarTab: View {
             return AnyShapeStyle(Color.teal.opacity(0.8))
         case .bonus:
             return AnyShapeStyle(LinearGradient(colors: [.teal, .blue], startPoint: .topLeading, endPoint: .bottomTrailing))
+        case .exempt:
+            return AnyShapeStyle(Color.gray.opacity(0.05))
         }
     }
     
@@ -438,7 +440,7 @@ struct CalendarTab: View {
     }
     
     private func handleDayTap(date: Date) {
-        let today = calendar.startOfDay(for: Date())
+        let today = calendar.startOfDay(for: Date.logicalNow)
         let target = calendar.startOfDay(for: date)
         if target < today {
             selectedPastDate = target
@@ -480,8 +482,10 @@ extension Date: @retroactive Identifiable {
 
 // MARK: - 统计分析 Tab
 struct StatisticsTab: View {
+    @State private var totalDays = 0
     @State private var longestStreak = 0
     @State private var reqTasksDone = 0
+    @State private var reqTasksTotal = 0
     @State private var bonusTasksDone = 0
     @State private var trendData: [(date: Date, count: Int)] = []
     
@@ -508,9 +512,12 @@ struct StatisticsTab: View {
     }
     
     private var statsGrid: some View {
-        HStack(spacing: 16) {
+        let rate = reqTasksTotal > 0 ? Int((Double(reqTasksDone) / Double(reqTasksTotal)) * 100) : 0
+        return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+            statCard(title: "Completion Rate", value: "\(rate)%", icon: "percent", color: .green)
+            statCard(title: "Total Days", value: "\(totalDays)", icon: "calendar.badge.checkmark", color: .blue)
             statCard(title: "Longest Streak", value: "\(longestStreak)", icon: "flame.fill", color: .orange)
-            statCard(title: "Required Tasks", value: "\(reqTasksDone)", icon: "star.fill", color: .teal)
+            statCard(title: "Required Tasks", value: "\(reqTasksDone)/\(reqTasksTotal)", icon: "star.fill", color: .teal)
             statCard(title: "Bonus Rewards", value: "\(bonusTasksDone)", icon: "sparkles", color: .purple)
         }
     }
@@ -577,8 +584,10 @@ struct StatisticsTab: View {
     }
     
     private func refreshData() {
+        totalDays = CheckInStore.shared.totalCheckInDays()
         longestStreak = CheckInStore.shared.longestStreak()
         reqTasksDone = CheckInStore.shared.totalRequiredTasksCompleted()
+        reqTasksTotal = CheckInStore.shared.totalRequiredTasksScheduled()
         bonusTasksDone = CheckInStore.shared.totalBonusTasksCompleted()
         trendData = CheckInStore.shared.completionTrend(days: 14)
     }
@@ -590,6 +599,10 @@ struct SettingsTab: View {
     @State private var templates = CheckInStore.shared.templates
     @State private var newTaskName = ""
     @State private var newTaskIsRequired = true
+    @State private var newTaskFrequency: String = "everyday"
+    @State private var newSpecificDates: [Date] = []
+    @State private var dateToAdd = Date.logicalNow
+    @State private var showResetAlert = false
     
     var body: some View {
         Form {
@@ -601,6 +614,91 @@ struct SettingsTab: View {
                     }
             }
             
+            Section(header: Text("Add New Task")) {
+                VStack(alignment: .leading, spacing: 12) {
+                    TextField("Task name...", text: $newTaskName)
+                        .textFieldStyle(.roundedBorder)
+                    
+                    Picker("Type", selection: $newTaskIsRequired) {
+                        Text("Required").tag(true)
+                        Text("Bonus").tag(false)
+                    }
+                    .pickerStyle(.segmented)
+                    
+                    Picker("Schedule", selection: $newTaskFrequency) {
+                        Text("Everyday").tag("everyday")
+                        Text("Weekdays").tag("weekdays")
+                        Text("Weekends").tag("weekends")
+                        Text("Specific Dates").tag("specificDates")
+                    }
+                    
+                    if newTaskFrequency == "specificDates" {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                DatePicker("", selection: $dateToAdd, displayedComponents: .date)
+                                    .labelsHidden()
+                                Button("Add Date") {
+                                    if !newSpecificDates.contains(where: { Calendar.current.isDate($0, inSameDayAs: dateToAdd) }) {
+                                        newSpecificDates.append(dateToAdd)
+                                    }
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                            if !newSpecificDates.isEmpty {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack {
+                                        ForEach(newSpecificDates, id: \.self) { date in
+                                            Text(date.formatted(.dateTime.month().day()))
+                                                .font(.caption)
+                                                .padding(.horizontal, 6)
+                                                .padding(.vertical, 4)
+                                                .background(Color.blue.opacity(0.1), in: Capsule())
+                                                .onTapGesture {
+                                                    newSpecificDates.removeAll { $0 == date }
+                                                }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .padding(.vertical, 8)
+                    }
+                    
+                    Button(action: {
+                        guard !newTaskName.isEmpty else { return }
+                        let frequency: TaskFrequency
+                        switch newTaskFrequency {
+                        case "everyday": frequency = .everyday
+                        case "weekdays": frequency = .weekdays
+                        case "weekends": frequency = .weekends
+                        case "specificDates":
+                            let formatter = DateFormatter()
+                            formatter.dateFormat = "yyyy-MM-dd"
+                            formatter.locale = Locale(identifier: "en_US_POSIX")
+                            formatter.timeZone = .current
+                            let strings = newSpecificDates.map { formatter.string(from: $0) }
+                            frequency = .specificDates(strings)
+                        default: frequency = .everyday
+                        }
+                        
+                        let newT = TaskTemplate(name: newTaskName, isRequired: newTaskIsRequired, sortOrder: templates.count, frequency: frequency)
+                        withAnimation {
+                            templates.append(newT)
+                            newTaskName = ""
+                            newSpecificDates.removeAll()
+                            newTaskFrequency = "everyday"
+                        }
+                        saveTemplates()
+                    }) {
+                        Text("Add Task")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .disabled(newTaskName.isEmpty || (newTaskFrequency == "specificDates" && newSpecificDates.isEmpty))
+                    .buttonStyle(.borderedProminent)
+                }
+                .padding(.vertical, 4)
+            }
+            
             Section(header: Text("Task Templates (Effective Tomorrow)"), footer: Text("Tasks must be 'Required' to count towards your streak.\n'Bonus' tasks award special icons when completed.")) {
                 List {
                     ForEach($templates) { $template in
@@ -610,12 +708,19 @@ struct SettingsTab: View {
                             
                             Spacer()
                             
+                            Text(frequencyString(for: template.frequency))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.secondary.opacity(0.1), in: Capsule())
+                            
                             Picker("", selection: $template.isRequired) {
-                                Text("Required").tag(true)
-                                Text("Bonus").tag(false)
+                                Text("Req").tag(true)
+                                Text("Opt").tag(false)
                             }
                             .pickerStyle(.menu)
-                            .frame(width: 90)
+                            .frame(width: 60)
                             
                             Button(action: {
                                 if let idx = templates.firstIndex(where: { $0.id == template.id }) {
@@ -636,38 +741,50 @@ struct SettingsTab: View {
                         templates.move(fromOffsets: indices, toOffset: newOffset)
                         saveTemplates()
                     }
-                    
-                    HStack {
-                        TextField("New task name...", text: $newTaskName)
-                            .textFieldStyle(.plain)
-                        
-                        Picker("", selection: $newTaskIsRequired) {
-                            Text("Required").tag(true)
-                            Text("Bonus").tag(false)
-                        }
-                        .pickerStyle(.menu)
-                        .frame(width: 90)
-                        
-                        Button("Add") {
-                            guard !newTaskName.isEmpty else { return }
-                            let newT = TaskTemplate(name: newTaskName, isRequired: newTaskIsRequired, sortOrder: templates.count)
-                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                templates.append(newT)
-                            }
-                            newTaskName = ""
-                            saveTemplates()
-                        }
-                        .disabled(newTaskName.isEmpty)
-                    }
-                    .padding(.vertical, 4)
                 }
                 .listStyle(.inset)
                 .frame(minHeight: 200)
             }
+            
+            Section {
+                Button(role: .destructive) {
+                    showResetAlert = true
+                } label: {
+                    HStack {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                        Text("Reset All Data")
+                    }
+                    .foregroundStyle(.red)
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding()
+        .alert("Reset All Data?", isPresented: $showResetAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Reset", role: .destructive) {
+                withAnimation {
+                    CheckInStore.shared.resetAllData()
+                    calendarName = CheckInStore.shared.calendarName
+                    templates = CheckInStore.shared.templates
+                    WidgetCenter.shared.reloadTimelines(ofKind: "CheckInCalendarWidget")
+                }
+            }
+        } message: {
+            Text("This will permanently delete all your check-in records and reset your tasks to defaults. This action cannot be undone.")
+        }
         .onChange(of: templates) { _, _ in
             saveTemplates()
+        }
+    }
+    
+    private func frequencyString(for freq: TaskFrequency) -> String {
+        switch freq {
+        case .everyday: return "Everyday"
+        case .weekdays: return "Weekdays"
+        case .weekends: return "Weekends"
+        case .specificWeekdays(_): return "Custom"
+        case .specificDates(let dates): return "\(dates.count) Dates"
         }
     }
     

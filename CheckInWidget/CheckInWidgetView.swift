@@ -94,11 +94,15 @@ struct HeatmapWidgetLayout: View {
                             let date = gridData[colIndex][rowIndex]
                             if let date = date {
                                 let status = getStatus(for: date)
-                                let isFuture = Calendar.current.startOfDay(for: date) > Calendar.current.startOfDay(for: Date())
+                                let isFuture = Calendar.current.startOfDay(for: date) > Calendar.current.startOfDay(for: Date.logicalNow)
+                                let isToday = Calendar.current.isDate(date, inSameDayAs: Date.logicalNow)
                                 
                                 RoundedRectangle(cornerRadius: 2)
                                     .fill(cellColor(for: status))
                                     .opacity(isFuture ? 0.05 : 1.0)
+                                    .overlay(
+                                        isToday ? RoundedRectangle(cornerRadius: 2).stroke(Color.teal, lineWidth: 1) : nil
+                                    )
                                     .frame(width: 10, height: 10)
                             } else {
                                 Color.clear.frame(width: 10, height: 10)
@@ -153,13 +157,14 @@ struct HeatmapWidgetLayout: View {
         case .partial: return Color.green.opacity(0.35)
         case .full: return Color.teal
         case .bonus: return Color.blue
+        case .exempt: return Color.gray.opacity(0.05)
         }
     }
     
     // 生成从今天往前推 N 周的数据（以周日为开头）
     private func generateHeatmapData(columns: Int) -> [[Date?]] {
         let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
+        let today = calendar.startOfDay(for: Date.logicalNow)
         let weekday = calendar.component(.weekday, from: today) // 1=Sun, 7=Sat
         
         let daysToSaturday = 7 - weekday
@@ -213,13 +218,13 @@ struct MonthOverviewGrid: View {
                         if index >= 0 && index < days.count {
                             let date = days[index]
                             let dayNumber = calendar.component(.day, from: date)
-                            let isToday = calendar.isDateInToday(date)
+                            let isToday = calendar.isDate(date, inSameDayAs: Date.logicalNow)
                             let status = getStatus(for: date)
                             
                             ZStack {
                                 RoundedRectangle(cornerRadius: 6)
                                     .fill(cellColor(for: status))
-                                    .opacity(date > Date() ? 0.1 : 1.0)
+                                    .opacity(date > Date.logicalNow ? 0.1 : 1.0)
                                     .padding(2)
                                 
                                 if isToday {
@@ -260,6 +265,7 @@ struct MonthOverviewGrid: View {
         case .partial: return Color.green.opacity(0.3)
         case .full: return Color.teal.opacity(0.8)
         case .bonus: return Color.blue.opacity(0.8)
+        case .exempt: return Color.gray.opacity(0.05)
         }
     }
 }

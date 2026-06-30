@@ -13,16 +13,15 @@
 
 <br>
 
-**Kinetik** is a meticulously designed macOS desktop application that helps you track your daily habits and tasks. Designed strictly around Apple's Human Interface Guidelines (HIG), it leverages cutting-edge SwiftUI features to deliver a premium, glassmorphic user experience right on your Mac.
+**Kinetik** is a lightning-fast, ultra-lightweight macOS desktop application designed for pure self-discipline and habit tracking. Built natively with SwiftUI, it stands as a rebellion against bloated web-wrapper apps. It consumes practically zero memory, collects absolutely **zero user data**, and keeps your focus exactly where it belongs: on your daily goals.
 
-## ✨ Features
+## ✨ Why Kinetik?
 
-- **Native macOS Design**: Built 100% with SwiftUI, featuring translucent `GlassBackground`, smooth spring animations, and native haptic feedback.
-- **Desktop Widgets**: Includes beautifully crafted Medium and Large desktop widgets. Your check-in heatmap is always just a glance away on your desktop.
-- **Dynamic Task System**: Easily manage "Required" and "Bonus" daily tasks. Settings sync instantly across the app and widgets.
-- **Retroactive Check-ins**: Forgot to log yesterday? You can only retroactively check in "Bonus" tasks, keeping your core streaks honest!
-- **Data Visualization**: View your check-in history through an interactive GitHub-style heatmap and an elegant, animated line chart.
-- **Lightweight & Fast**: Zero external dependencies. All data is persisted locally and securely using native macOS file system APIs.
+- 🔒 **100% Privacy & Zero Tracking**: Your data belongs to you. Everything is stored locally on your Mac's file system. No cloud syncing, no analytics, no accounts, and absolutely zero telemetry.
+- ⚡️ **Ultra-Lightweight**: Built purely with native macOS technologies. No Electron, no web views. It consumes a fraction of the memory of typical apps and launches instantly.
+- 🎯 **Pure Self-Discipline**: A focused environment for your daily routines. Differentiate between "Required" core habits and optional "Bonus" tasks to maintain an honest streak.
+- 💎 **Uncompromised Native Design**: While performance is the priority, aesthetics aren't sacrificed. Features translucent `GlassBackground`, smooth spring animations, and native haptic feedback that feels perfectly at home on macOS.
+- 🧩 **Always-on Desktop Widgets**: Keep your check-in heatmap on your desktop. Your progress is always just a glance away, seamlessly integrated with your workspace.
 
 ## 📸 Screenshots
 
