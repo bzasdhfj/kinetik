@@ -18,6 +18,8 @@ struct CheckInEntry: TimelineEntry {
     let statuses: [String: CompletionStatus]
     /// 当前连续签到天数
     let consecutiveDays: Int
+    /// 累计签到天数
+    let totalDays: Int
     /// 今日是否已签到
     let isTodayCheckedIn: Bool
 }
@@ -36,6 +38,7 @@ struct CheckInTimelineProvider: AppIntentTimelineProvider {
             calendarName: "每日打卡",
             statuses: ["2026-06-18": .full, "2026-06-19": .full, "2026-06-20": .bonus],
             consecutiveDays: 3,
+            totalDays: 12,
             isTodayCheckedIn: true
         )
     }
@@ -69,11 +72,13 @@ struct CheckInTimelineProvider: AppIntentTimelineProvider {
     /// 从 CheckInStore 读取当前数据，构建时间线条目
     private func createEntry(for configuration: CheckInWidgetConfigIntent) -> CheckInEntry {
         let store = CheckInStore.shared
+        let logicalNow = Date.logicalNow
         return CheckInEntry(
-            date: .now,
+            date: logicalNow,
             calendarName: configuration.calendarName,
-            statuses: store.getStatuses(around: .now),
+            statuses: store.getStatuses(around: logicalNow),
             consecutiveDays: store.consecutiveDays(),
+            totalDays: store.totalCheckInDays(),
             isTodayCheckedIn: store.isTodayCheckedIn()
         )
     }

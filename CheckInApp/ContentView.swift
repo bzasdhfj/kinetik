@@ -8,32 +8,36 @@ struct ContentView: View {
     @State private var streak: Int = CheckInStore.shared.consecutiveDays()
     
     var body: some View {
-        TabView(selection: $selectedTab) {
-            TasksTab(streak: $streak)
-                .tabItem {
-                    Label("Today's Tasks", systemImage: "checklist")
-                }
-                .tag(0)
+        HStack(spacing: 0) {
+            // Sidebar
+            SidebarView(selectedTab: $selectedTab, streak: $streak)
+                .frame(width: 200)
             
-            CalendarTab(streak: $streak)
-                .tabItem {
-                    Label("Calendar", systemImage: "calendar")
-                }
-                .tag(1)
-                
-            StatisticsTab()
-                .tabItem {
-                    Label("Analytics", systemImage: "chart.xyaxis.line")
-                }
-                .tag(2)
+            // Divider
+            Divider()
+                .background(Color.white.opacity(0.08))
             
-            SettingsTab()
-                .tabItem {
-                    Label("Settings", systemImage: "gear")
+            // Main View Area
+            ZStack(alignment: .top) {
+                switch selectedTab {
+                case 0:
+                    TasksView(date: Date.logicalNow, streak: $streak, isReadOnlyPast: false)
+                case 1:
+                    CalendarTab(streak: $streak)
+                case 2:
+                    StatisticsTab()
+                case 3:
+                    SettingsTab()
+                default:
+                    EmptyView()
                 }
-                .tag(3)
+            }
+            .padding(.top, 48) // Push content layer below title bar
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(GlassBackground())
+            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: selectedTab)
         }
-        .frame(minWidth: 500, minHeight: 650)
+        .frame(minWidth: 880, minHeight: 620)
         .onAppear {
             refreshStreak()
         }
@@ -54,10 +58,119 @@ struct GlassBackground: View {
                 .ignoresSafeArea()
             
             Color(nsColor: .windowBackgroundColor)
-                .opacity(0.4)
+                .opacity(0.25)
                 .background(.ultraThinMaterial)
                 .ignoresSafeArea()
         }
+    }
+}
+
+// MARK: - 侧边栏 View
+struct SidebarView: View {
+    @Binding var selectedTab: Int
+    @Binding var streak: Int
+    @State private var isHoveringTab: [Int: Bool] = [:]
+    
+    let tabs = [
+        ("Today", "checklist"),
+        ("Calendar", "calendar"),
+        ("Analytics", "chart.xyaxis.line"),
+        ("Settings", "gearshape")
+    ]
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            // App Logo and Title
+            HStack(spacing: 10) {
+                if let iconImage = NSImage(named: NSImage.applicationIconName) {
+                    Image(nsImage: iconImage)
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                } else {
+                    Image(systemName: "leaf.fill")
+                        .font(.title3)
+                        .foregroundStyle(Color.teal)
+                }
+                
+                Text("Kinetik")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(LinearGradient(colors: [.white, .secondary], startPoint: .top, endPoint: .bottom))
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 24)
+            
+            // Navigation Links
+            VStack(spacing: 4) {
+                ForEach(0..<tabs.count, id: \.self) { idx in
+                    Button(action: {
+                        selectedTab = idx
+                    }) {
+                        HStack(spacing: 12) {
+                            Image(systemName: tabs[idx].1)
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(selectedTab == idx ? .white : .secondary)
+                                .frame(width: 18, height: 18)
+                            Text(tabs[idx].0)
+                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                            Spacer()
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .contentShape(Rectangle())
+                        .foregroundStyle(selectedTab == idx ? Color.white : Color.primary.opacity(0.8))
+                        .background(
+                            ZStack {
+                                if selectedTab == idx {
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(LinearGradient(colors: [Color.teal.opacity(0.75), Color.blue.opacity(0.75)], startPoint: .leading, endPoint: .trailing))
+                                } else if isHoveringTab[idx] ?? false {
+                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                        .fill(Color.white.opacity(0.06))
+                                }
+                            }
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .onHover { hovering in
+                        withAnimation(.easeOut(duration: 0.15)) {
+                            isHoveringTab[idx] = hovering
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 8)
+            
+            Spacer()
+            
+            // Streak Widget at bottom of Sidebar
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    Text("🔥")
+                        .font(.system(size: 16))
+                    Text("\(streak)-day streak")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(.primary)
+                }
+                Text("Consistency is key")
+                    .font(.system(size: 10))
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .fill(Color.white.opacity(0.03))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                    )
+            )
+            .padding(.horizontal, 12)
+            .padding(.bottom, 20)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.ultraThinMaterial)
     }
 }
 
@@ -86,42 +199,44 @@ struct TasksView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-                headerView
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                        let requiredTasks = record.tasks.filter { $0.isRequired }
-                        if !requiredTasks.isEmpty {
-                            TaskSectionView(
-                                title: "Required Tasks",
-                                icon: "star.fill",
-                                tasks: requiredTasks,
-                                isLocked: isReadOnlyPast
-                            ) { taskId in
-                                toggleTask(taskId)
-                            }
-                        }
-                        
-                        let bonusTasks = record.tasks.filter { !$0.isRequired }
-                        if !bonusTasks.isEmpty {
-                            TaskSectionView(
-                                title: "Bonus Tasks (Optional)",
-                                icon: "sparkles",
-                                tasks: bonusTasks,
-                                isLocked: false // 附加任务永远允许补签
-                            ) { taskId in
-                                toggleTask(taskId)
-                            }
-                        }
-                        
-                        if record.tasks.isEmpty {
-                            EmptyStateView()
+            headerView
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    let requiredTasks = record.tasks.filter { $0.isRequired }
+                    if !requiredTasks.isEmpty {
+                        TaskSectionView(
+                            title: "Required Tasks",
+                            icon: "star.fill",
+                            tasks: requiredTasks,
+                            isLocked: isReadOnlyPast
+                        ) { taskId in
+                            toggleTask(taskId)
                         }
                     }
-                    .padding(24)
+                    
+                    let bonusTasks = record.tasks.filter { !$0.isRequired }
+                    if !bonusTasks.isEmpty {
+                        TaskSectionView(
+                            title: "Bonus Tasks (Optional)",
+                            icon: "sparkles",
+                            tasks: bonusTasks,
+                            isLocked: false
+                        ) { taskId in
+                            toggleTask(taskId)
+                        }
+                    }
+                    
+                    if record.tasks.isEmpty {
+                        EmptyStateView()
+                    }
                 }
+                .frame(maxWidth: 600)
+                .padding(24)
+                .frame(maxWidth: .infinity)
             }
-        .background(GlassBackground())
+        }
+        .background(Color.clear)
         .onAppear {
             record = CheckInStore.shared.getRecord(for: date)
         }
@@ -129,10 +244,10 @@ struct TasksView: View {
     
     private var headerView: some View {
         HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 4) {
                 Text(Calendar.current.isDateInToday(date) ? "Today's Tasks" : "\(date.formatted(.dateTime.month().day())) Tasks")
                     .font(.system(size: 32, weight: .bold, design: .rounded))
-                    .foregroundStyle(LinearGradient(colors: [.teal, .blue], startPoint: .leading, endPoint: .trailing))
+                    .foregroundStyle(.primary)
                 
                 if isReadOnlyPast {
                     Text("⚠️ Required tasks expired. Only bonus tasks can be checked in retroactively.")
@@ -144,7 +259,7 @@ struct TasksView: View {
                     let optTotal = record.tasks.filter { !$0.isRequired }.count
                     let optDone = record.tasks.filter { !$0.isRequired && $0.isCompleted }.count
                     
-                    Text("Required \(reqDone)/\(reqTotal) | Bonus \(optDone)/\(optTotal)")
+                    Text("Required \(reqDone)/\(reqTotal)  •  Bonus \(optDone)/\(optTotal)")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -155,7 +270,7 @@ struct TasksView: View {
             if isReadOnlyPast {
                 Button(action: { dismiss() }) {
                     Image(systemName: "xmark.circle.fill")
-                        .font(.title)
+                        .font(.title2)
                         .foregroundStyle(.secondary.opacity(0.8))
                 }
                 .buttonStyle(.plain)
@@ -163,11 +278,11 @@ struct TasksView: View {
                 .hoverScale()
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: 600)
         .padding(.horizontal, 24)
-        .padding(.top, 24)
-        .padding(.bottom, 16)
-        .background(.ultraThinMaterial)
+        .padding(.top, 28)
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity)
     }
     
     private func toggleTask(_ taskId: UUID) {
@@ -186,9 +301,9 @@ struct TaskSectionView: View {
     let onToggle: (UUID) -> Void
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 10) {
             Label(title, systemImage: icon)
-                .font(.headline)
+                .font(.system(size: 13, weight: .semibold, design: .rounded))
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 4)
             
@@ -200,12 +315,18 @@ struct TaskSectionView: View {
                         }
                     }
                     if task.id != tasks.last?.id {
-                        Divider().padding(.leading, 48)
+                        Divider()
+                            .background(Color.white.opacity(0.06))
+                            .padding(.leading, 48)
                     }
                 }
             }
-            .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 16))
-            .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 1)
+            )
+            .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 6)
         }
     }
 }
@@ -228,16 +349,16 @@ struct TaskRowView: View {
                 ZStack {
                     Circle()
                         .strokeBorder(isLocked ? Color.gray.opacity(0.3) : (task.isCompleted ? (task.isRequired ? Color.teal : Color.orange) : Color.gray.opacity(0.4)), lineWidth: 2)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 22, height: 22)
                     
                     if task.isCompleted {
                         Circle()
                             .fill(isLocked ? Color.gray.opacity(0.3) : (task.isRequired ? Color.teal : Color.orange))
-                            .frame(width: 24, height: 24)
+                            .frame(width: 22, height: 22)
                             .transition(.scale.combined(with: .opacity))
                         
                         Image(systemName: "checkmark")
-                            .font(.system(size: 12, weight: .bold))
+                            .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(isLocked ? Color.gray : .white)
                     }
                 }
@@ -246,7 +367,7 @@ struct TaskRowView: View {
             .disabled(isLocked)
             
             Text(task.name)
-                .font(.system(size: 16, design: .rounded))
+                .font(.system(size: 15, design: .rounded))
                 .foregroundStyle(task.isCompleted ? .secondary : (isLocked ? .tertiary : .primary))
                 .strikethrough(task.isCompleted, color: .secondary)
             
@@ -254,16 +375,23 @@ struct TaskRowView: View {
             
             if isLocked {
                 Image(systemName: "lock.fill")
-                    .font(.system(size: 12))
+                    .font(.system(size: 11))
                     .foregroundStyle(.tertiary)
             }
         }
-        .padding(.vertical, 14)
+        .padding(.vertical, 12)
         .padding(.horizontal, 16)
         .contentShape(Rectangle())
-        .background(isHovered && !isLocked ? Color.teal.opacity(0.1) : Color.clear, in: RoundedRectangle(cornerRadius: 12))
-        .scaleEffect(isHovered && !isLocked ? 1.02 : 1.0)
-        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isHovered)
+        .background(
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(isHovered && !isLocked ? Color.teal.opacity(0.06) : Color.clear)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(isHovered && !isLocked ? Color.teal.opacity(0.15) : Color.clear, lineWidth: 1)
+                )
+        )
+        .scaleEffect(isHovered && !isLocked ? 1.015 : 1.0)
+        .animation(.spring(response: 0.25, dampingFraction: 0.7), value: isHovered)
         .onHover { hovered in
             isHovered = hovered
         }
@@ -290,12 +418,13 @@ struct CalendarTab: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                    streakBanner
-                    calendarCard
-                }
-                .padding(24)
+                calendarCard
+            }
+            .frame(maxWidth: 600)
+            .padding(24)
+            .frame(maxWidth: .infinity)
         }
-        .background(GlassBackground())
+        .background(Color.clear)
         .onAppear { refreshTrigger += 1 }
         .sheet(item: $selectedPastDate) { date in
             TasksView(date: date, streak: $streak, isReadOnlyPast: true)
@@ -303,40 +432,29 @@ struct CalendarTab: View {
         }
     }
     
-    private var streakBanner: some View {
-        HStack(spacing: 8) {
-            Text("🔥").font(.title2)
-            Text("\(streak)-day streak")
-                .font(.system(size: 16, weight: .semibold, design: .rounded))
-                .contentTransition(.numericText())
-        }
-        .padding(.horizontal, 20).padding(.vertical, 14)
-        .frame(maxWidth: .infinity)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).strokeBorder(Color.orange.opacity(0.3), lineWidth: 1.5))
-        .shadow(color: .orange.opacity(0.1), radius: 10, x: 0, y: 4)
-        .animation(.spring, value: streak)
-    }
-    
     private var calendarCard: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 18) {
             monthNavigationBar
             weekdayHeaders
             dayGrid
         }
         .padding(20)
-        .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.08), radius: 15, x: 0, y: 8)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.white.opacity(0.12), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.15), radius: 25, x: 0, y: 12)
     }
     
     private var monthNavigationBar: some View {
         HStack {
-            Button { withAnimation { shiftMonth(by: -1) } } label: { Image(systemName: "chevron.left.circle.fill").font(.title2).foregroundStyle(.teal) }.buttonStyle(.plain)
+            Button { withAnimation { shiftMonth(by: -1) } } label: { Image(systemName: "chevron.left.circle.fill").font(.title3).foregroundStyle(.teal) }.buttonStyle(.plain)
             Spacer()
             
             HStack(spacing: 12) {
                 Text(monthYearString(for: displayedMonth))
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
                 
                 DatePicker("Jump to date", selection: $displayedMonth, displayedComponents: [.date])
                     .datePickerStyle(.compact)
@@ -346,7 +464,7 @@ struct CalendarTab: View {
             }
             
             Spacer()
-            Button { withAnimation { shiftMonth(by: 1) } } label: { Image(systemName: "chevron.right.circle.fill").font(.title2).foregroundStyle(.teal) }.buttonStyle(.plain)
+            Button { withAnimation { shiftMonth(by: 1) } } label: { Image(systemName: "chevron.right.circle.fill").font(.title3).foregroundStyle(.teal) }.buttonStyle(.plain)
         }
     }
     
@@ -354,7 +472,7 @@ struct CalendarTab: View {
         let symbols = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         return HStack(spacing: 0) {
             ForEach(symbols, id: \.self) { symbol in
-                Text(symbol).font(.caption).fontWeight(.bold).foregroundStyle(.secondary).frame(maxWidth: .infinity)
+                Text(symbol).font(.system(size: 11, weight: .bold, design: .rounded)).foregroundStyle(.secondary).frame(maxWidth: .infinity)
             }
         }
     }
@@ -392,7 +510,7 @@ struct CalendarTab: View {
             
             if isToday {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .strokeBorder(Color.teal, lineWidth: 2)
+                    .strokeBorder(Color.teal, lineWidth: 1.5)
             }
             
             if status == .bonus {
@@ -403,7 +521,7 @@ struct CalendarTab: View {
             }
             
             Text("\(dayNumber)")
-                .font(.system(size: 15, weight: isToday ? .heavy : .medium, design: .rounded))
+                .font(.system(size: 14, weight: isToday ? .heavy : .medium, design: .rounded))
                 .foregroundStyle(cellForegroundColor(status: status, isToday: isToday, isFuture: isFuture))
         }
         .frame(height: 42)
@@ -417,13 +535,13 @@ struct CalendarTab: View {
         case .none:
             return AnyShapeStyle(Color.gray.opacity(0.1))
         case .partial:
-            return AnyShapeStyle(Color.green.opacity(0.3))
+            return AnyShapeStyle(Color.green.opacity(0.25))
         case .full:
-            return AnyShapeStyle(Color.teal.opacity(0.8))
+            return AnyShapeStyle(Color.teal.opacity(0.75))
         case .bonus:
             return AnyShapeStyle(LinearGradient(colors: [.teal, .blue], startPoint: .topLeading, endPoint: .bottomTrailing))
         case .exempt:
-            return AnyShapeStyle(Color.gray.opacity(0.05))
+            return AnyShapeStyle(Color.gray.opacity(0.04))
         }
     }
     
@@ -496,9 +614,11 @@ struct StatisticsTab: View {
                 statsGrid
                 chartCard
             }
+            .frame(maxWidth: 800)
             .padding(24)
+            .frame(maxWidth: .infinity)
         }
-        .background(GlassBackground())
+        .background(Color.clear)
         .onAppear {
             refreshData()
         }
@@ -506,8 +626,8 @@ struct StatisticsTab: View {
     
     private var header: some View {
         Text("Analytics & Trends")
-            .font(.system(size: 32, weight: .bold, design: .rounded))
-            .foregroundStyle(LinearGradient(colors: [.teal, .blue], startPoint: .leading, endPoint: .trailing))
+            .font(.system(size: 28, weight: .bold, design: .rounded))
+            .foregroundStyle(LinearGradient(colors: [.white, .secondary], startPoint: .leading, endPoint: .trailing))
             .frame(maxWidth: .infinity, alignment: .leading)
     }
     
@@ -525,25 +645,29 @@ struct StatisticsTab: View {
     private func statCard(title: String, value: String, icon: String, color: Color) -> some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
-                .font(.title)
+                .font(.title2)
                 .foregroundStyle(color)
             Text(value)
-                .font(.system(size: 28, weight: .bold, design: .rounded))
+                .font(.system(size: 26, weight: .bold, design: .rounded))
                 .foregroundStyle(.primary)
             Text(title)
-                .font(.caption)
+                .font(.system(size: 11, weight: .medium, design: .rounded))
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
-        .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 16))
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .padding(.vertical, 18)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .stroke(Color.white.opacity(0.12), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.12), radius: 10, x: 0, y: 6)
     }
     
     private var chartCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Last 14 Days Trend")
-                .font(.headline)
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
                 .foregroundStyle(.secondary)
             
             Chart {
@@ -561,17 +685,17 @@ struct StatisticsTab: View {
                         y: .value("Tasks", item.count)
                     )
                     .interpolationMethod(.monotone)
-                    .foregroundStyle(LinearGradient(colors: [Color.teal.opacity(0.3), Color.clear], startPoint: .top, endPoint: .bottom))
+                    .foregroundStyle(LinearGradient(colors: [Color.teal.opacity(0.25), Color.clear], startPoint: .top, endPoint: .bottom))
                     
                     PointMark(
                         x: .value("Date", item.date),
                         y: .value("Tasks", item.count)
                     )
                     .foregroundStyle(Color.orange)
-                    .symbolSize(60)
+                    .symbolSize(40)
                 }
             }
-            .frame(height: 250)
+            .frame(height: 220)
             .chartXAxis {
                 AxisMarks(values: .stride(by: .day, count: 2)) { _ in
                     AxisValueLabel(format: .dateTime.month().day())
@@ -579,8 +703,12 @@ struct StatisticsTab: View {
             }
         }
         .padding(20)
-        .background(.thickMaterial, in: RoundedRectangle(cornerRadius: 20))
-        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .stroke(Color.white.opacity(0.12), lineWidth: 1)
+        )
+        .shadow(color: .black.opacity(0.15), radius: 20, x: 0, y: 8)
     }
     
     private func refreshData() {
@@ -605,161 +733,216 @@ struct SettingsTab: View {
     @State private var showResetAlert = false
     
     var body: some View {
-        Form {
-            Section(header: Text("Basic Settings")) {
-                TextField("Calendar Name", text: $calendarName)
-                    .onChange(of: calendarName) { _, newValue in
-                        CheckInStore.shared.calendarName = newValue
-                        WidgetCenter.shared.reloadTimelines(ofKind: "CheckInCalendarWidget")
-                    }
-            }
-            
-            Section(header: Text("Add New Task")) {
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Settings")
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundStyle(LinearGradient(colors: [.white, .secondary], startPoint: .leading, endPoint: .trailing))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                // Calendar Name
                 VStack(alignment: .leading, spacing: 12) {
-                    TextField("Task name...", text: $newTaskName)
-                        .textFieldStyle(.roundedBorder)
+                    Text("Basic Config")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
                     
-                    Picker("Type", selection: $newTaskIsRequired) {
-                        Text("Required").tag(true)
-                        Text("Bonus").tag(false)
-                    }
-                    .pickerStyle(.segmented)
-                    
-                    Picker("Schedule", selection: $newTaskFrequency) {
-                        Text("Everyday").tag("everyday")
-                        Text("Weekdays").tag("weekdays")
-                        Text("Weekends").tag("weekends")
-                        Text("Specific Dates").tag("specificDates")
-                    }
-                    
-                    if newTaskFrequency == "specificDates" {
-                        VStack(alignment: .leading, spacing: 8) {
-                            HStack {
-                                DatePicker("", selection: $dateToAdd, displayedComponents: .date)
-                                    .labelsHidden()
-                                Button("Add Date") {
-                                    if !newSpecificDates.contains(where: { Calendar.current.isDate($0, inSameDayAs: dateToAdd) }) {
-                                        newSpecificDates.append(dateToAdd)
-                                    }
-                                }
-                                .buttonStyle(.bordered)
+                    HStack {
+                        Text("Calendar Title")
+                            .font(.system(size: 13, design: .rounded))
+                        Spacer()
+                        TextField("daily", text: $calendarName)
+                            .textFieldStyle(.roundedBorder)
+                            .frame(width: 180)
+                            .onChange(of: calendarName) { _, newValue in
+                                CheckInStore.shared.calendarName = newValue
+                                WidgetCenter.shared.reloadTimelines(ofKind: "CheckInCalendarWidget")
                             }
-                            if !newSpecificDates.isEmpty {
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack {
-                                        ForEach(newSpecificDates, id: \.self) { date in
-                                            Text(date.formatted(.dateTime.month().day()))
-                                                .font(.caption)
-                                                .padding(.horizontal, 6)
+                    }
+                    .padding(16)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Color.white.opacity(0.12), lineWidth: 1))
+                }
+                
+                // Add New Task Form
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Add Habit template")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                    
+                    VStack(alignment: .leading, spacing: 14) {
+                        TextField("Habit name...", text: $newTaskName)
+                            .textFieldStyle(.roundedBorder)
+                        
+                        Picker("Task Priority", selection: $newTaskIsRequired) {
+                            Text("Core Habit").tag(true)
+                            Text("Optional Bonus").tag(false)
+                        }
+                        .pickerStyle(.segmented)
+                        
+                        Picker("Frequency Schedule", selection: $newTaskFrequency) {
+                            Text("Everyday").tag("everyday")
+                            Text("Weekdays").tag("weekdays")
+                            Text("Weekends").tag("weekends")
+                            Text("Specific Dates").tag("specificDates")
+                        }
+                        
+                        if newTaskFrequency == "specificDates" {
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    DatePicker("", selection: $dateToAdd, displayedComponents: .date)
+                                        .labelsHidden()
+                                    Button("Add Date") {
+                                        if !newSpecificDates.contains(where: { Calendar.current.isDate($0, inSameDayAs: dateToAdd) }) {
+                                            newSpecificDates.append(dateToAdd)
+                                        }
+                                    }
+                                    .buttonStyle(.bordered)
+                                }
+                                if !newSpecificDates.isEmpty {
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 6) {
+                                            ForEach(newSpecificDates, id: \.self) { date in
+                                                HStack(spacing: 4) {
+                                                    Text(date.formatted(.dateTime.month().day()))
+                                                    Image(systemName: "xmark")
+                                                        .font(.system(size: 8, weight: .bold))
+                                                }
+                                                .font(.system(size: 11, design: .rounded))
+                                                .padding(.horizontal, 8)
                                                 .padding(.vertical, 4)
-                                                .background(Color.blue.opacity(0.1), in: Capsule())
+                                                .background(Color.teal.opacity(0.15), in: Capsule())
                                                 .onTapGesture {
                                                     newSpecificDates.removeAll { $0 == date }
                                                 }
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                        .padding(.vertical, 8)
-                    }
-                    
-                    Button(action: {
-                        guard !newTaskName.isEmpty else { return }
-                        let frequency: TaskFrequency
-                        switch newTaskFrequency {
-                        case "everyday": frequency = .everyday
-                        case "weekdays": frequency = .weekdays
-                        case "weekends": frequency = .weekends
-                        case "specificDates":
-                            let formatter = DateFormatter()
-                            formatter.dateFormat = "yyyy-MM-dd"
-                            formatter.locale = Locale(identifier: "en_US_POSIX")
-                            formatter.timeZone = .current
-                            let strings = newSpecificDates.map { formatter.string(from: $0) }
-                            frequency = .specificDates(strings)
-                        default: frequency = .everyday
-                        }
                         
-                        let newT = TaskTemplate(name: newTaskName, isRequired: newTaskIsRequired, sortOrder: templates.count, frequency: frequency)
-                        withAnimation {
-                            templates.append(newT)
-                            newTaskName = ""
-                            newSpecificDates.removeAll()
-                            newTaskFrequency = "everyday"
-                        }
-                        saveTemplates()
-                    }) {
-                        Text("Add Task")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .disabled(newTaskName.isEmpty || (newTaskFrequency == "specificDates" && newSpecificDates.isEmpty))
-                    .buttonStyle(.borderedProminent)
-                }
-                .padding(.vertical, 4)
-            }
-            
-            Section(header: Text("Task Templates (Effective Tomorrow)"), footer: Text("Tasks must be 'Required' to count towards your streak.\n'Bonus' tasks award special icons when completed.")) {
-                List {
-                    ForEach($templates) { $template in
-                        HStack {
-                            TextField("Task Name", text: $template.name)
-                                .textFieldStyle(.plain)
-                            
-                            Spacer()
-                            
-                            Text(frequencyString(for: template.frequency))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .padding(.horizontal, 6)
-                                .padding(.vertical, 2)
-                                .background(Color.secondary.opacity(0.1), in: Capsule())
-                            
-                            Picker("", selection: $template.isRequired) {
-                                Text("Req").tag(true)
-                                Text("Opt").tag(false)
+                        Button(action: {
+                            guard !newTaskName.isEmpty else { return }
+                            let frequency: TaskFrequency
+                            switch newTaskFrequency {
+                            case "everyday": frequency = .everyday
+                            case "weekdays": frequency = .weekdays
+                            case "weekends": frequency = .weekends
+                            case "specificDates":
+                                let formatter = DateFormatter()
+                                formatter.dateFormat = "yyyy-MM-dd"
+                                formatter.locale = Locale(identifier: "en_US_POSIX")
+                                formatter.timeZone = .current
+                                let strings = newSpecificDates.map { formatter.string(from: $0) }
+                                frequency = .specificDates(strings)
+                            default: frequency = .everyday
                             }
-                            .pickerStyle(.menu)
-                            .frame(width: 60)
                             
-                            Button(action: {
-                                if let idx = templates.firstIndex(where: { $0.id == template.id }) {
-                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                        templates.remove(at: idx)
-                                    }
-                                    saveTemplates()
+                            let newT = TaskTemplate(name: newTaskName, isRequired: newTaskIsRequired, sortOrder: templates.count, frequency: frequency)
+                            withAnimation {
+                                templates.append(newT)
+                                newTaskName = ""
+                                newSpecificDates.removeAll()
+                                newTaskFrequency = "everyday"
+                            }
+                            saveTemplates()
+                        }) {
+                            Text("Create Task Template")
+                                .frame(maxWidth: .infinity)
+                                .font(.system(size: 13, weight: .semibold))
+                        }
+                        .disabled(newTaskName.isEmpty || (newTaskFrequency == "specificDates" && newSpecificDates.isEmpty))
+                        .buttonStyle(.borderedProminent)
+                    }
+                    .padding(16)
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Color.white.opacity(0.12), lineWidth: 1))
+                }
+                
+                // Templates List
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Existing Habits")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.secondary)
+                    
+                    VStack(spacing: 0) {
+                        ForEach($templates) { $template in
+                            HStack(spacing: 12) {
+                                TextField("Task Name", text: $template.name)
+                                    .textFieldStyle(.plain)
+                                    .font(.system(size: 13, design: .rounded))
+                                
+                                Spacer()
+                                
+                                Text(frequencyString(for: template.frequency))
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .foregroundStyle(.secondary)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.white.opacity(0.08), in: Capsule())
+                                
+                                Picker("", selection: $template.isRequired) {
+                                    Text("Req").tag(true)
+                                    Text("Opt").tag(false)
                                 }
-                            }) {
-                                Image(systemName: "trash")
-                                    .foregroundStyle(.red)
+                                .pickerStyle(.menu)
+                                .frame(width: 55)
+                                .font(.system(size: 11))
+                                
+                                Button(action: {
+                                    if let idx = templates.firstIndex(where: { $0.id == template.id }) {
+                                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                            templates.remove(at: idx)
+                                        }
+                                        saveTemplates()
+                                    }
+                                }) {
+                                    Image(systemName: "trash")
+                                        .foregroundStyle(.red)
+                                        .font(.subheadline)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
+                            .padding(.vertical, 8)
+                            .padding(.horizontal, 12)
+                            
+                            if template.id != templates.last?.id {
+                                Divider()
+                                    .background(Color.white.opacity(0.06))
+                            }
                         }
-                        .padding(.vertical, 4)
                     }
-                    .onMove { indices, newOffset in
-                        templates.move(fromOffsets: indices, toOffset: newOffset)
-                        saveTemplates()
-                    }
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Color.white.opacity(0.12), lineWidth: 1))
                 }
-                .listStyle(.inset)
-                .frame(minHeight: 200)
-            }
-            
-            Section {
-                Button(role: .destructive) {
-                    showResetAlert = true
-                } label: {
-                    HStack {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                        Text("Reset All Data")
+                
+                // Danger Zone
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Danger Zone")
+                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.red.opacity(0.8))
+                    
+                    Button(role: .destructive) {
+                        showResetAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                            Text("Reset All Data")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .foregroundStyle(.red)
+                        .background(Color.red.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.red.opacity(0.2), lineWidth: 1))
                     }
-                    .foregroundStyle(.red)
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
+            .frame(maxWidth: 600)
+            .padding(24)
+            .frame(maxWidth: .infinity)
         }
-        .padding()
+        .background(Color.clear)
         .alert("Reset All Data?", isPresented: $showResetAlert) {
             Button("Cancel", role: .cancel) { }
             Button("Reset", role: .destructive) {
@@ -803,9 +986,9 @@ struct HoverScaleModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .scaleEffect(isHovered && !disabled ? 1.08 : 1.0)
-            .shadow(color: isHovered && !disabled ? Color.teal.opacity(0.3) : .clear, radius: isHovered ? 8 : 0, x: 0, y: 4)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isHovered)
+            .scaleEffect(isHovered && !disabled ? 1.05 : 1.0)
+            .shadow(color: isHovered && !disabled ? Color.teal.opacity(0.25) : .clear, radius: isHovered ? 6 : 0, x: 0, y: 3)
+            .animation(.spring(response: 0.25, dampingFraction: 0.65), value: isHovered)
             .onHover { hovering in
                 isHovered = hovering
             }

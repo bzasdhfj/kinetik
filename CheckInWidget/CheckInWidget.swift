@@ -48,6 +48,7 @@ struct CheckInWidgetBundle: WidgetBundle {
         calendarName: "Daily Check-In",
         statuses: ["2026-06-18": .full, "2026-06-19": .full, "2026-06-20": .bonus, "2026-06-21": .bonus],
         consecutiveDays: 4,
+        totalDays: 16,
         isTodayCheckedIn: true
     )
     CheckInEntry(
@@ -55,6 +56,7 @@ struct CheckInWidgetBundle: WidgetBundle {
         calendarName: "Daily Check-In",
         statuses: ["2026-06-18": .full, "2026-06-19": .full, "2026-06-20": .bonus],
         consecutiveDays: 3,
+        totalDays: 12,
         isTodayCheckedIn: false
     )
 }
@@ -67,6 +69,7 @@ struct CheckInWidgetBundle: WidgetBundle {
         calendarName: "Daily Check-In",
         statuses: ["2026-06-18": .full, "2026-06-19": .full, "2026-06-20": .bonus, "2026-06-21": .bonus],
         consecutiveDays: 4,
+        totalDays: 16,
         isTodayCheckedIn: true
     )
 }

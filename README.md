@@ -38,7 +38,7 @@
 ### Building from source
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/kinetik.git
+   git clone https://github.com/bzasdhfj/kinetik.git
    ```
 2. Open `CheckInApp.xcodeproj` in Xcode.
 3. Select the `CheckInApp` scheme and hit `Cmd + R` to build and run!
@@ -52,7 +52,7 @@
 
 ## 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/kinetik/issues).
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/bzasdhfj/kinetik/issues).
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)

@@ -14,7 +14,7 @@ struct CheckInIntent: AppIntent {
     /// - 操作完成后刷新 Widget 时间线
     func perform() async throws -> some IntentResult {
         let store = CheckInStore.shared
-        let today = Date()
+        let today = Date.logicalNow
 
         if store.isTodayCheckedIn() {
             var record = store.getRecord(for: today)

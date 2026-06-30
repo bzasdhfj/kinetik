@@ -20,23 +20,31 @@ enum TaskFrequency: Codable, Equatable, Hashable {
     case specificDates([String]) // "yyyy-MM-dd"
 }
 
+enum TaskPriority: String, Codable, CaseIterable {
+    case low = "Low"
+    case medium = "Medium"
+    case high = "High"
+}
+
 struct TaskTemplate: Codable, Identifiable, Equatable {
     var id: UUID = UUID()
     var name: String
     var isRequired: Bool
     var sortOrder: Int
     var frequency: TaskFrequency = .everyday
+    var priority: TaskPriority = .medium
     
     enum CodingKeys: String, CodingKey {
-        case id, name, isRequired, sortOrder, frequency
+        case id, name, isRequired, sortOrder, frequency, priority
     }
     
-    init(id: UUID = UUID(), name: String, isRequired: Bool, sortOrder: Int, frequency: TaskFrequency = .everyday) {
+    init(id: UUID = UUID(), name: String, isRequired: Bool, sortOrder: Int, frequency: TaskFrequency = .everyday, priority: TaskPriority = .medium) {
         self.id = id
         self.name = name
         self.isRequired = isRequired
         self.sortOrder = sortOrder
         self.frequency = frequency
+        self.priority = priority
     }
     
     init(from decoder: Decoder) throws {
@@ -46,6 +54,7 @@ struct TaskTemplate: Codable, Identifiable, Equatable {
         isRequired = try container.decode(Bool.self, forKey: .isRequired)
         sortOrder = try container.decode(Int.self, forKey: .sortOrder)
         frequency = try container.decodeIfPresent(TaskFrequency.self, forKey: .frequency) ?? .everyday
+        priority = try container.decodeIfPresent(TaskPriority.self, forKey: .priority) ?? .medium
     }
     
     func matches(date: Date) -> Bool {
@@ -73,6 +82,30 @@ struct DailyTask: Codable, Identifiable, Equatable {
     var name: String
     var isRequired: Bool
     var isCompleted: Bool
+    var priority: TaskPriority = .medium
+    
+    enum CodingKeys: String, CodingKey {
+        case id, templateId, name, isRequired, isCompleted, priority
+    }
+    
+    init(id: UUID = UUID(), templateId: UUID, name: String, isRequired: Bool, isCompleted: Bool, priority: TaskPriority = .medium) {
+        self.id = id
+        self.templateId = templateId
+        self.name = name
+        self.isRequired = isRequired
+        self.isCompleted = isCompleted
+        self.priority = priority
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        templateId = try container.decode(UUID.self, forKey: .templateId)
+        name = try container.decode(String.self, forKey: .name)
+        isRequired = try container.decode(Bool.self, forKey: .isRequired)
+        isCompleted = try container.decode(Bool.self, forKey: .isCompleted)
+        priority = try container.decodeIfPresent(TaskPriority.self, forKey: .priority) ?? .medium
+    }
 }
 
 enum CompletionStatus: String, Codable, Equatable {
@@ -240,9 +273,10 @@ final class CheckInStore {
                         var updatedTask = existingTask
                         updatedTask.name = template.name
                         updatedTask.isRequired = template.isRequired
+                        updatedTask.priority = template.priority // Sync priority
                         syncedTasks.append(updatedTask)
                     } else {
-                        syncedTasks.append(DailyTask(templateId: template.id, name: template.name, isRequired: template.isRequired, isCompleted: false))
+                        syncedTasks.append(DailyTask(templateId: template.id, name: template.name, isRequired: template.isRequired, isCompleted: false, priority: template.priority))
                     }
                 }
             }
@@ -255,7 +289,7 @@ final class CheckInStore {
             if inMemoryData.records[key] == nil {
                 let currentTemplates = templates
                 record.tasks = currentTemplates.filter { $0.matches(date: targetDate) }.map { t in
-                    DailyTask(templateId: t.id, name: t.name, isRequired: t.isRequired, isCompleted: false)
+                    DailyTask(templateId: t.id, name: t.name, isRequired: t.isRequired, isCompleted: false, priority: t.priority)
                 }
                 inMemoryData.records[key] = record
                 saveData()

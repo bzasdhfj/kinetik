@@ -11,32 +11,38 @@ struct CheckInWidgetView: View {
         Group {
             switch widgetFamily {
             case .systemMedium:
-                HeatmapWidgetLayout(entry: entry, columns: 16)
+                MediumWidgetLayout(entry: entry)
             case .systemLarge:
                 VStack(spacing: 12) {
                     HeatmapWidgetLayout(entry: entry, columns: 16)
                     
                     Divider().padding(.vertical, 4)
                     
-                    // Large widget can also show the month grid
                     Text("Recent Activity")
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                         .frame(maxWidth: .infinity, alignment: .leading)
                     
-                    MonthOverviewGrid(entry: entry)
+                    MonthOverviewGrid(entry: entry, cellSize: 22, spacing: 4, fontSize: 11)
                 }
             default:
-                HeatmapWidgetLayout(entry: entry, columns: 16)
+                MediumWidgetLayout(entry: entry)
             }
         }
         .containerBackground(for: .widget) {
             ZStack {
-                Image("WidgetBackgroundImage")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                // Peach-Pink-Purple gradient matching the main App
+                LinearGradient(
+                    colors: [
+                        Color(red: 254/255, green: 225/255, blue: 165/255), // Soft peach
+                        Color(red: 253/255, green: 180/255, blue: 200/255), // Soft pink
+                        Color(red: 215/255, green: 185/255, blue: 235/255)  // Soft purple
+                    ],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
                 
-                Color(nsColor: .windowBackgroundColor)
-                    .opacity(0.3)
+                // Frosted glass effect
+                Color.white.opacity(0.12)
                     .background(.ultraThinMaterial)
             }
         }
@@ -61,30 +67,43 @@ struct HeatmapWidgetLayout: View {
                 }
                 Spacer()
                 
-                // Streak
-                HStack(spacing: 2) {
-                    Text("🔥").font(.system(size: 12))
-                    Text("\(entry.consecutiveDays) days")
-                        .font(.system(size: 13, weight: .heavy, design: .rounded))
-                        .foregroundStyle(Color.orange)
+                // Streak & Total
+                HStack(spacing: 6) {
+                    HStack(spacing: 2) {
+                        Text("🔥").font(.system(size: 10))
+                        Text("\(entry.consecutiveDays)d")
+                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                            .foregroundStyle(Color.orange)
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(Color.orange.opacity(0.12), in: Capsule())
+                    
+                    HStack(spacing: 2) {
+                        Text("📊").font(.system(size: 10))
+                        Text("\(entry.totalDays)d")
+                            .font(.system(size: 11, weight: .heavy, design: .rounded))
+                            .foregroundStyle(Color.teal)
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 3)
+                    .background(Color.teal.opacity(0.12), in: Capsule())
                 }
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(Color.orange.opacity(0.12), in: Capsule())
             }
             
             // Heatmap Grid
             HStack(spacing: 3) {
                 // Y-Axis labels (Weekdays)
                 VStack(spacing: 3) {
-                    Text("S").font(.system(size: 7)).foregroundStyle(.tertiary).frame(height: 10)
-                    Text("").font(.system(size: 7)).frame(height: 10)
-                    Text("T").font(.system(size: 7)).foregroundStyle(.tertiary).frame(height: 10)
-                    Text("").font(.system(size: 7)).frame(height: 10)
-                    Text("T").font(.system(size: 7)).foregroundStyle(.tertiary).frame(height: 10)
-                    Text("").font(.system(size: 7)).frame(height: 10)
-                    Text("S").font(.system(size: 7)).foregroundStyle(.tertiary).frame(height: 10)
+                    Text("Sun").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
+                    Text("Mon").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
+                    Text("Tue").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
+                    Text("Wed").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
+                    Text("Thur").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
+                    Text("Fri").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
+                    Text("Sat").font(.system(size: 7, weight: .bold)).foregroundStyle(.secondary).frame(height: 10)
                 }
+                .frame(width: 22, alignment: .trailing)
                 
                 let gridData = generateHeatmapData(columns: columns)
                 
@@ -119,7 +138,7 @@ struct HeatmapWidgetLayout: View {
                     if entry.isTodayCheckedIn {
                         Text("✅ Checked In")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundStyle(.green)
+                            .foregroundStyle(Color.black.opacity(0.7))
                     } else {
                         Text("📝 Check In Now")
                             .font(.system(size: 12, weight: .bold, design: .rounded))
@@ -131,7 +150,6 @@ struct HeatmapWidgetLayout: View {
                 .background {
                     if entry.isTodayCheckedIn {
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(Color.green.opacity(0.12))
                     } else {
                         RoundedRectangle(cornerRadius: 6, style: .continuous)
                             .fill(LinearGradient(colors: [.teal, .blue], startPoint: .leading, endPoint: .trailing))
@@ -146,6 +164,7 @@ struct HeatmapWidgetLayout: View {
     private func getStatus(for date: Date) -> CompletionStatus {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = .current
         let key = formatter.string(from: date)
         return entry.statuses[key] ?? .none
@@ -188,9 +207,13 @@ struct HeatmapWidgetLayout: View {
     }
 }
 
-// MARK: - 大号挂件的月份预览
+// MARK: - 大号挂件的月份预览 (参数化)
 struct MonthOverviewGrid: View {
     let entry: CheckInEntry
+    var cellSize: CGFloat = 22
+    var spacing: CGFloat = 4
+    var fontSize: CGFloat = 11
+    
     private let calendar = Calendar.current
     
     var body: some View {
@@ -200,12 +223,12 @@ struct MonthOverviewGrid: View {
         let totalCells = leadingEmptyDays + days.count
         let rows = (totalCells + 6) / 7
         
-        VStack(spacing: 4) {
+        VStack(spacing: spacing) {
             // Weekday Header
             HStack(spacing: 0) {
-                ForEach(["S", "M", "T", "W", "T", "F", "S"], id: \.self) { day in
+                ForEach(["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], id: \.self) { day in
                     Text(day)
-                        .font(.system(size: 10, weight: .bold))
+                        .font(.system(size: fontSize - 3, weight: .bold))
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity)
                 }
@@ -222,27 +245,27 @@ struct MonthOverviewGrid: View {
                             let status = getStatus(for: date)
                             
                             ZStack {
-                                RoundedRectangle(cornerRadius: 6)
+                                RoundedRectangle(cornerRadius: cellSize * 0.25)
                                     .fill(cellColor(for: status))
                                     .opacity(date > Date.logicalNow ? 0.1 : 1.0)
-                                    .padding(2)
+                                    .padding(cellSize * 0.08)
                                 
                                 if isToday {
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .strokeBorder(Color.teal, lineWidth: 1.5)
-                                        .padding(2)
+                                    RoundedRectangle(cornerRadius: cellSize * 0.25)
+                                        .strokeBorder(Color.black.opacity(0.6), lineWidth: 1)
+                                        .padding(cellSize * 0.08)
                                 }
                                 
                                 Text("\(dayNumber)")
-                                    .font(.system(size: 12, weight: isToday ? .heavy : .medium))
-                                    .foregroundStyle(status == .full || status == .bonus ? Color.white : .primary)
+                                    .font(.system(size: fontSize, weight: isToday ? .heavy : .medium))
+                                    .foregroundStyle(status == .full || status == .bonus ? Color.white : Color.black.opacity(0.8))
                             }
-                            .frame(height: 24)
+                            .frame(height: cellSize)
                             .frame(maxWidth: .infinity)
                             
                         } else {
                             Color.clear
-                                .frame(height: 24)
+                                .frame(height: cellSize)
                                 .frame(maxWidth: .infinity)
                         }
                     }
@@ -254,6 +277,7 @@ struct MonthOverviewGrid: View {
     private func getStatus(for date: Date) -> CompletionStatus {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = .current
         let key = formatter.string(from: date)
         return entry.statuses[key] ?? .none
@@ -261,11 +285,124 @@ struct MonthOverviewGrid: View {
     
     private func cellColor(for status: CompletionStatus) -> Color {
         switch status {
-        case .none: return Color.gray.opacity(0.1)
-        case .partial: return Color.green.opacity(0.3)
-        case .full: return Color.teal.opacity(0.8)
-        case .bonus: return Color.blue.opacity(0.8)
-        case .exempt: return Color.gray.opacity(0.05)
+        case .none: return Color.black.opacity(0.04)
+        case .partial: return Color.orange.opacity(0.35)
+        case .full: return Color.red.opacity(0.65)
+        case .bonus: return Color.purple.opacity(0.65)
+        case .exempt: return Color.black.opacity(0.02)
         }
+    }
+}
+
+// MARK: - 中号挂件：分栏 Dashboard 布局 (左侧操作/连胜，右侧月份日历)
+struct MediumWidgetLayout: View {
+    let entry: CheckInEntry
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // 左侧：打卡信息与按钮
+            VStack(alignment: .leading, spacing: 4) {
+                Text(entry.calendarName)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.black.opacity(0.85))
+                
+                // 连胜与累计合并型玻璃胶囊 (暗色半透明以适配亮色背景)
+                HStack(spacing: 8) {
+                    HStack(spacing: 2) {
+                        Text("🔥").font(.system(size: 9))
+                        Text("\(entry.consecutiveDays)d")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color(red: 220/255, green: 100/255, blue: 0))
+                    }
+                    
+                    Divider()
+                        .frame(width: 1, height: 10)
+                        .background(Color.black.opacity(0.15))
+                    
+                    HStack(spacing: 2) {
+                        Text("📊").font(.system(size: 9))
+                        Text("\(entry.totalDays)d")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color(red: 0, green: 130/255, blue: 130/255))
+                    }
+                }
+                .padding(.horizontal, 8)
+                .padding(.vertical, 4)
+                .background(Color.black.opacity(0.04))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(Color.black.opacity(0.08), lineWidth: 1)
+                )
+                .padding(.vertical, 2)
+                
+                Spacer()
+                
+                // 打卡按钮 (适配软件暖粉橘色调的渐变按钮)
+                Button(intent: CheckInIntent()) {
+                    HStack(spacing: 4) {
+                        if entry.isTodayCheckedIn {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundStyle(Color(red: 0, green: 150/255, blue: 80/255))
+                            Text("Checked In")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color(red: 0, green: 150/255, blue: 80/255))
+                        } else {
+                            Image(systemName: "checkmark.circle")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundStyle(.white)
+                            Text("Check In Now")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                        }
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background {
+                        if entry.isTodayCheckedIn {
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(Color.green.opacity(0.08))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                        .stroke(Color.green.opacity(0.15), lineWidth: 1)
+                                )
+                        } else {
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(LinearGradient(colors: [Color(red: 255/255, green: 110/255, blue: 110/255), Color(red: 255/255, green: 150/255, blue: 90/255)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                                .shadow(color: Color.red.opacity(0.15), radius: 4, x: 0, y: 2)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            
+            // 右侧：紧凑型月份日历 (暗色半透明边框区块)
+            VStack(spacing: 4) {
+                Text(monthYearString(for: entry.date))
+                    .font(.system(size: 9, weight: .heavy, design: .rounded))
+                    .foregroundStyle(Color.black.opacity(0.5))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                
+                MonthOverviewGrid(entry: entry, cellSize: 12, spacing: 2, fontSize: 8)
+            }
+            .padding(8)
+            .background(Color.black.opacity(0.02))
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .stroke(Color.black.opacity(0.05), lineWidth: 1)
+            )
+            .frame(width: 122)
+        }
+        .padding(.vertical, 2)
+    }
+    
+    private func monthYearString(for date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yyyy"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter.string(from: date)
     }
 }
