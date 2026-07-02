@@ -128,6 +128,10 @@ struct DailyRecord: Codable, Equatable {
         let requiredCompleted = requiredTasks.filter { $0.isCompleted }.count
         let bonusCompleted = bonusTasks.filter { $0.isCompleted }.count
         
+        if requiredCompleted == 0 && bonusCompleted == 0 {
+            return requiredTasks.isEmpty ? .exempt : .none
+        }
+        
         if requiredTasks.isEmpty {
             if bonusCompleted > 0 {
                 return bonusCompleted == bonusTasks.count ? .bonus : .partial
